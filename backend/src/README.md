@@ -113,10 +113,10 @@ Covers:
 
 ## 📦 Environment
 
-| Variable        | Purpose                         |
-|----------------|----------------------------------|
-| `JWT_Secret`   | Secret key for token generation  |
-| `ConnectionStrings__DefaultConnection` | SQL Server connection string |
+| Variable                               | Purpose                          |
+|----------------------------------------|----------------------------------|
+| `JWT_Secret`                           | Secret key for token generation  |
+| `ConnectionStrings__DefaultConnection` | SQL Server connection string     |
 
 ---
 

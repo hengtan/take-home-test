@@ -9,7 +9,7 @@ Sample interface for consuming the **Fundo API** (Loan Management) using Angular
 - Loan listing
 - Loan details by ID
 - Registering payments
-- Complete JWT authentication integration (login via clientId/clientSecret)
+- Complete JWT authentication integration (login via clientId / clientSecret)
 - Modern UI (Angular Material + TailwindCSS)
 - Clean, extensible structure (standalone components, best practices)
 
