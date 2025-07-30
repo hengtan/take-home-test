@@ -1,0 +1,6 @@
+@Fundo.API_HostAddress = http://localhost:5183
+
+GET {{Fundo.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

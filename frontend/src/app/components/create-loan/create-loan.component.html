@@ -1,0 +1,32 @@
+<div class="space-y-6">
+  <h2 class="text-2xl font-bold text-blue-600">Create New Loan</h2>
+
+  <form (ngSubmit)="createLoan()" class="space-y-4">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Applicant Name</label>
+      <input [(ngModel)]="applicantName" name="applicantName" required
+             class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Amount</label>
+      <input type="number" [(ngModel)]="amount" name="amount" required
+             class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Current Balance</label>
+      <input type="number" [(ngModel)]="currentBalance" name="currentBalance" required
+             class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" />
+    </div>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+      Create Loan
+    </button>
+  </form>
+
+  <div *ngIf="success" class="text-green-600 font-semibold">Loan successfully created!</div>
+  <div *ngIf="error" class="text-red-600 font-semibold">{{ error }}</div>
+
+  <a routerLink="/" class="inline-block text-blue-600 hover:underline mt-6 text-sm">&larr; Back to Home</a>
+</div>

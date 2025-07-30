@@ -1,0 +1,30 @@
+<!-- src/app/components/home/home.component.html -->
+<div class="min-h-[calc(100vh-64px)] flex items-center justify-center bg-gray-50 px-4">
+  <div class="text-center space-y-8">
+    <h1 class="text-4xl font-extrabold text-blue-700 tracking-tight">Welcome to the Loan System</h1>
+    <div class="flex flex-col space-y-4">
+      <a
+        routerLink="/create-loan"
+        class="px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg shadow hover:bg-indigo-700 transition"
+      >
+        Create New Loan
+      </a>
+      <a routerLink="/loan-payment"
+         class="px-6 py-3 bg-yellow-600 text-white font-semibold rounded-lg shadow hover:bg-yellow-700 transition">
+        Register Payment
+      </a>
+      <a
+        routerLink="/loans"
+        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition"
+      >
+        View Loan List
+      </a>
+      <a
+        routerLink="/loan-detail"
+        class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow hover:bg-green-700 transition"
+      >
+        View Loan Details
+      </a>
+    </div>
+  </div>
+</div>

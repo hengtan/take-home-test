@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      SA_PASSWORD: "Your_strong_Pass123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 1 bash -c '</dev/tcp/127.0.0.1/1433'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    platform: linux/amd64
+    build:
+      context: ./backend/src
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - DOTNET_GENERATE_ASPNET_CERTIFICATE=false
+      - ConnectionStrings__Default=Server=db;Database=LoanDb;User Id=sa;Password=Your_strong_Pass123;TrustServerCertificate=True
+      - Jwt__Key=super-strong-secret-key-for-testing-123!
+      - Jwt__Issuer=FundoIssuer
+      - Jwt__Audience=FundoAudience
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+
+  tests:
+    build:
+      context: ./backend/src
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/src/Fundo.Services.Tests/appsettings.test.json:/app/appsettings.test.json
+    command: ["dotnet", "test", "Fundo.Services.Tests/Fundo.Services.Tests.csproj", "--logger", "trx"]
+
+volumes:
+  mssql_data:

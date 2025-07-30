@@ -1,83 +1,224 @@
-# **Take-Home Test: Backend-Focused Full-Stack Developer (.NET C# & Angular)**
+# Fundo - Loan Management System
 
-## **Objective**
+A full-stack, modern, and secure Loan Management System built with **.NET 8 (Clean Architecture)** and **Angular 19**.
 
-This take-home test evaluates your ability to develop and integrate a .NET Core (C#) backend with an Angular frontend, focusing on API design, database integration, and basic DevOps practices.
-
-## **Instructions**
-
-1.  **Fork the provided repository** before starting the implementation.
-2.  Implement the requested features in your forked repository.
-3.  Once you have completed the implementation, **send the link** to your forked repository via email for review.
-
-## **Task**
-
-You will build a simple **Loan Management System** with a **.NET Core backend (C#)** exposing RESTful APIs and a **basic Angular frontend** consuming these APIs.
+This project is designed as a take-home challenge for Full-Stack Developer roles, featuring robust authentication, rich validation, best engineering practices, and a clear separation of concerns.
 
 ---
 
-## **Requirements**
+## 🏗️ Tech Stack
 
-### **1. Backend (API) - .NET Core**
-
-* Create a **RESTful API** in .NET Core to handle **loan applications**.
-* Implement the following endpoints:
-    * `POST /loans` → Create a new loan.
-    * `GET /loans/{id}` → Retrieve loan details.
-    * `GET /loans` → List all loans.
-    * `POST /loans/{id}/payment` → Deduct from `currentBalance`.
-* Loan example (feel free to improve it):
-
-    ```json
-    {
-        "amount": 1500.00, // Amount requested
-        "currentBalance": 500.00, // Remaining balance
-        "applicantName": "Maria Silva", // User name
-        "status": "active" // Status can be active or paid
-    }
-    ```
-
-* Use **Entity Framework Core** with **SQL Server**.
-* Create seed data to populate the loans (the frontend will consume this).
-* Write **unit/integration tests for the API** (xUnit or NUnit).
-* **Dockerize** the backend and create a **Docker Compose** file.
-* Create a README with setup instructions.
-
-### **2. Frontend - Angular (Simplified UI)**  
-
-Develop a **lightweight Angular app** to interact with the backend
-
-#### **Features:**  
-- A **table** to display a list of existing loans.  
-
-#### **Mockup:**  
-[View Mockup](https://kzmgtjqt0vx63yji8h9l.lite.vusercontent.net/)  
-(*The design doesn’t need to be an exact replica of the mockup—it serves as a reference. Aim to keep it as close as possible.*)  
+| Layer      | Technology / Approach                      |
+|------------|--------------------------------------------|
+| Frontend   | Angular 19, TailwindCSS, Standalone Components |
+| Backend    | ASP.NET Core 8 (.NET 8 / C# 13), MediatR   |
+| ORM        | Entity Framework Core (SQL Server)         |
+| Validation | FluentValidation                           |
+| Auth       | JWT Bearer Token                           |
+| Tests      | xUnit, Moq, FluentAssertions, Jasmine, Karma |
+| DevOps     | Docker, Docker Compose, GitHub Actions     |
+| Docs       | Swagger (with JWT Auth UI)                 |
 
 ---
 
-## **Bonus (Optional, Not Required)**
+## 🧩 Project Structure
 
-* **Improve error handling and logging** with structured logs.
-* Implement **authentication**.
-* Create a **GitHub Actions** pipeline for building and testing the backend.
+```
+repo-root/
+│
+├── backend/
+│   └── src/
+│       ├── Fundo.API           # Controllers, middleware, Swagger, Auth config
+│       ├── Fundo.Application   # CQRS (commands/queries), DTOs, validation
+│       ├── Fundo.Domain        # Core business logic and entities
+│       ├── Fundo.Infrastructure# Persistence layer, EF Core
+│       └── Fundo.Tests         # Unit & integration tests
+│
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── components/     # Standalone Angular components (Loans, Auth, etc)
+│   │   │   ├── services/       # AuthService, LoanService, interceptors
+│   │   │   └── ...             # Main app setup
+│   ├── tailwind.config.js
+│   ├── angular.json
+│   └── package.json
+│
+├── docker-compose.yml
+└── README.md                   # (You're here!)
+```
 
 ---
 
-## **Evaluation Criteria**
+## 🚀 Running the Project (Dev Setup)
 
-✔ **Code quality** (clean architecture, modularization, best practices).
+**Requirements:**
+- [Docker](https://www.docker.com/)
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Node.js (v20+)](https://nodejs.org/) + [Yarn](https://yarnpkg.com/) or npm
 
-✔ **Functionality** (the API and frontend should work as expected).
+### 1. Clone the repository
 
-✔ **Security considerations** (authentication, validation, secure API handling).
+```bash
+git clone https://github.com/your-user/fundo-fullstack.git
+cd fundo-fullstack
+```
 
-✔ **Testing coverage** (unit tests for critical backend functions).
+### 2. Start everything (API + SQL Server + Frontend)
 
-✔ **Basic DevOps implementation** (Docker for backend).
+```bash
+docker-compose up --build
+```
+- API (Swagger): http://localhost:8080/swagger
+- Angular UI: http://localhost:4200/
 
 ---
 
-## **Additional Information**
+## 🗝️ Authentication Flow
 
-Candidates are encouraged to include a `README.md` file in their repository detailing their implementation approach, any challenges they faced, features they couldn't complete, and any improvements they would make given more time. Ideally, the implementation should be completed within **two days** of starting the test.
+All API endpoints are JWT-protected.
+
+### Obtain a JWT
+
+```http
+POST http://localhost:8080/api/Auth/token
+Content-Type: application/json
+
+{
+  "clientId": "fundo-app",
+  "clientSecret": "dev-secret-123"
+}
+```
+
+**Copy the returned token** and use it for all subsequent API calls:
+```
+Authorization: Bearer <your_token>
+```
+
+The Angular frontend performs this flow automatically via `AuthService`. The token is stored in localStorage and injected into all API requests.
+
+---
+
+## 🧪 Backend: Available Endpoints
+
+| Method | Route                      | Description               |
+|--------|----------------------------|---------------------------|
+| POST   | `/api/Auth/token`          | Generate JWT token        |
+| POST   | `/loans`                   | Create new loan           |
+| GET    | `/loans`                   | Get all loans             |
+| GET    | `/loans/{id}`            | Get loan by ID            |
+| POST   | `/loans/{id}/payment`    | Register a payment        |
+
+---
+
+## ▶️ Running Locally: Backend (API)
+
+From `backend/src`:
+
+```bash
+dotnet build
+dotnet run --project Fundo.API
+```
+
+API docs at http://localhost:8080/swagger
+
+To run all backend tests:
+
+```bash
+dotnet test
+```
+
+---
+
+## ▶️ Running Locally: Frontend (Angular)
+
+From `frontend`:
+
+```bash
+yarn install  # or npm install
+yarn start    # or npm start
+```
+
+- App: http://localhost:4200/
+
+### Frontend Features
+
+- **Login is automatic**: the app requests a JWT with the demo credentials (`fundo-app` / `dev-secret-123`) on startup.
+- **Loan list**: Shows all loans, using Angular standalone components, TailwindCSS, loading skeleton, error states.
+- **Loan details**: View full details by clicking a loan, fetches by ID.
+- **Register payment**: Submit payment for a loan.
+- **Global error handling**: HTTP errors are handled and surfaced in the UI.
+- **JWT Interceptor**: All requests send `Authorization: Bearer ...` header.
+
+#### Key Files / Concepts
+
+- `auth.service.ts` — handles login/token storage
+- `loan.service.ts` — CRUD for loans, includes payment
+- `auth.interceptor.ts` — attaches JWT to all outgoing requests
+- `loans-list.component.ts` — shows the list (uses Angular material/table)
+- `loan-detail.component.ts` — details for a single loan
+- Uses TailwindCSS utility classes for styling and layout
+
+---
+
+## 🧪 Tests
+
+- **Backend**: xUnit, Moq, FluentAssertions, in-memory integration tests
+- **Frontend**: (TODO)
+
+Run backend tests:
+
+```bash
+dotnet test
+```
+
+Run frontend tests:
+
+```bash
+yarn test
+# or
+npm run test
+```
+
+---
+
+## 📦 Environment Variables
+
+| Variable                       | Purpose                              |
+|--------------------------------|--------------------------------------|
+| `JWT_Secret`                   | Secret key for JWT                   |
+| `ConnectionStrings__DefaultConnection` | SQL Server connection string     |
+
+---
+
+## 🐳 Docker & Docker Compose
+
+All services can be brought up with:
+
+```bash
+docker-compose up --build
+```
+
+This will start:
+- **SQL Server** (containerized)
+- **.NET Backend** (API on :8080)
+- **Angular Frontend** (on :4200)
+
+---
+
+## Swagger Demo Credentials
+
+- **User**: `fundo-app`
+- **Secret**: `dev-secret-123`
+
+---
+
+## 👩‍💻 Highlights
+
+- Clean, domain-driven architecture
+- Full JWT Auth with protected endpoints
+- Rich validation (FluentValidation, error responses)
+- Solid test coverage (unit + integration)
+- Clean UI: Angular standalone components, Tailwind, JWT login, error handling
+- Dockerized: fast local setup
+

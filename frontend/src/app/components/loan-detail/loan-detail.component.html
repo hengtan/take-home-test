@@ -1,0 +1,26 @@
+<div class="space-y-6">
+  <h2 class="text-2xl font-bold text-blue-600">Search Loan by ID</h2>
+
+  <div class="flex flex-col sm:flex-row gap-4">
+    <input [(ngModel)]="loanId" type="text" placeholder="Enter Loan ID"
+           class="w-full sm:w-2/3 px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400" />
+    <button (click)="fetchLoan()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+      Search
+    </button>
+  </div>
+
+  <div *ngIf="error" class="text-red-600 font-medium">{{ error }}</div>
+
+  <div *ngIf="loan" class="bg-white rounded shadow p-6 border">
+    <h3 class="text-xl font-bold mb-4 text-gray-700">Loan Details</h3>
+    <ul class="space-y-2 text-sm">
+      <li><strong>ID:</strong> {{ loan.id }}</li>
+      <li><strong>Applicant Name:</strong> {{ loan.applicantName }}</li>
+      <li><strong>Amount:</strong> {{ loan.amount | currency:'USD' }}</li>
+      <li><strong>Current Balance:</strong> {{ loan.currentBalance | currency:'USD' }}</li>
+      <li><strong>Status:</strong> {{ loan.status }}</li>
+    </ul>
+  </div>
+
+  <a routerLink="/" class="inline-block text-blue-600 hover:underline mt-6 text-sm">&larr; Back to Home</a>
+</div>
