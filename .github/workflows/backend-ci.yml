@@ -1,0 +1,59 @@
+name: Backend CI
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+  pull_request:
+    paths:
+      - 'backend/**'
+
+jobs:
+  build-and-test-backend:
+    runs-on: ubuntu-latest
+
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-CU24-ubuntu-20.04
+        ports:
+          - 1433:1433
+        env:
+          SA_PASSWORD: "Your_strong_Pass123"
+          ACCEPT_EULA: "Y"
+
+    steps:
+      - name: ⏬ Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🛠 Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: ⌛ Wait for SQL Server to be ready
+        run: |
+          echo "⌛ Aguardando SQL Server subir..."
+          for i in {1..20}; do
+            nc -z localhost 1433 && echo "✅ SQL Server está escutando!" && break
+            echo "⏳ Tentativa $i: SQL ainda não está pronto..."
+            sleep 5
+          done
+
+      - name: 🧹 Clean solution
+        run: dotnet clean backend/src/src.sln
+
+      - name: 📦 Restore dependencies
+        run: dotnet restore backend/src/src.sln
+
+      - name: 🏗 Build solution
+        run: dotnet build backend/src/src.sln --no-restore --configuration Release
+
+      - name: 🧪 Run unit tests
+        run: dotnet test backend/src/src.sln --no-build --configuration Release --logger "trx"
+
+      - name: 📤 Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/TestResults/*.trx'
